@@ -1,0 +1,57 @@
+int Menu_select(char* pre_input, char menu[][MENU_LENGTH], char* aft_input, int menu_count) {
+	int input_char;
+	int select = 1;
+	CONSOLE_CURSOR_INFO cursorInfo = { 1, };
+	cursorInfo.bVisible = FALSE;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+	while (1) {
+		system("cls");
+		if (strcmp(pre_input, "\0"))
+			printf("%s", pre_input);
+		for (int i = 0; i < menu_count; i++) {
+			if (select - 1 == i) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+				printf("%d. %s\n", i + 1, menu[i]);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+			}
+			else
+				printf("%d. %s\n", i + 1, menu[i]);
+		}
+		if (strcmp(aft_input, "\0"))
+			printf("%s", aft_input);
+		input_char = _getch();
+		switch (input_char) {
+		case 13:
+			cursorInfo.bVisible = TRUE;
+			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+			return select;
+		case 27:
+			cursorInfo.bVisible = TRUE;
+			SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursorInfo);
+			return 0;
+		case 224:
+			input_char = _getch();
+			switch (input_char) {
+			case 72:
+				if (select == 1)
+					break;
+				else
+					select--;
+				break;
+			case 80:
+				if (select == menu_count)
+					break;
+				else
+					select++;
+				break;
+			case 75:
+				select = 1;
+				break;
+			case 77:
+				select = menu_count;
+				break;
+			}
+			break;
+		}
+	}
+}
